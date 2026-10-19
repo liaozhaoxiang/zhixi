@@ -33,11 +33,16 @@ CSV / Excel 拖进来，秒级完成解析 → 建表 → 字段画像 → 元�
 **3. 归因不瞎猜维度。**
 "为什么华南区 7 月销售额降了"，早期版本随便挑一个维度拆，答成"深圳降了 65%"——深圳是地点，不是原因。现在先算每个候选维度的**波动集中度**（最大成员变化额 ÷ 全部成员变化额绝对值之和），渠道 0.886 > 城市 0.65，所以它自己选了渠道：外卖少了 13.2 万，占全部波动的 88.6%。
 
+> 这组数字来自 `python make_sample_sales.py` 生成的样例表（固定随机种子，可原样复现），拖进左栏再提问即可。
+
 ## 快速开始
 
 需要 Python 3.10+。
 
 ```bash
+git clone https://github.com/liaozhaoxiang/zhixi.git
+cd zhixi
+
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
@@ -45,6 +50,8 @@ pip install -r requirements.txt
 python gen_data.py                # 生成内置演示库 data/zhixi.db（星型模型，约 31 万行）
 python _run_server.py             # 起服务：http://127.0.0.1:8010
 ```
+
+仓库里不含数据库和上传文件（都在 `.gitignore` 里），`gen_data.py` 用固定随机种子生成，**任何人跑出来的数字都一样**。
 
 Windows 上也可以直接双击 `启动智析.bat`：它会探测 8010 是否已在跑，没跑就后台拉起（pythonw 无窗口），起来后自动开浏览器。
 
