@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智析 · 面试演示话术（界面走查 · 换表实测 · 工程追问）</title>
+<style>
+  :root{
+    --ink:#1b1f24; --sub:#5b6572; --line:#e3e7ec; --bg:#ffffff;
+    --accent:#0f6f6c; --accent-soft:#eef7f6; --warn:#8a5a00; --warn-soft:#fdf6e7;
+    --dim:#8a94a3;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:#f6f7f9; color:var(--ink);
+    font:16px/1.75 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:880px; margin:0 auto; padding:44px 28px 80px;}
+  header{border-bottom:2px solid var(--ink); padding-bottom:18px; margin-bottom:30px;}
+  h1{font-size:28px; margin:0 0 6px; letter-spacing:.5px;}
+  .lede{color:var(--sub); font-size:15px; margin:0;}
+  .meta{color:var(--sub); font-size:13px; margin-top:10px;}
+  h2{
+    font-size:19px; margin:42px 0 8px; padding-left:11px;
+    border-left:4px solid var(--accent);
+  }
+  h3{
+    font-size:15.5px; margin:26px 0 4px; color:var(--accent);
+    font-weight:600; letter-spacing:.3px;
+  }
+  p{margin:8px 0;}
+  .stage{
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; margin:14px 0 18px;
+  }
+  .stage-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+  .tag{
+    display:inline-block; background:var(--accent-soft); color:var(--accent);
+    font-size:12px; padding:2px 9px; border-radius:999px; font-weight:600;
+    letter-spacing:.4px; white-space:nowrap;
+  }
+  .tag.gray{background:#f0f2f5; color:var(--sub);}
+  .time{color:var(--sub); font-size:13px;}
+  .do{font-size:14px; color:var(--sub); margin:6px 0 10px;}
+  .do code{
+    background:#f2f4f7; border:1px solid var(--line); border-radius:4px;
+    padding:1px 7px; font-size:13.5px; color:#19414a;
+  }
+  .say{
+    border-left:3px solid var(--accent); background:#fbfcfd;
+    padding:12px 16px; margin:10px 0; font-size:15.5px; line-height:1.85;
+  }
+  .say b{color:var(--accent);}
+  .why{font-size:14px; color:var(--sub); margin-top:8px;}
+  .why b{color:#333;}
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:14.5px;}
+  th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top;}
+  th{background:#f3f5f8; font-weight:600;}
+  td.num{font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .note{
+    background:var(--warn-soft); border:1px solid #f0e0bb; border-radius:8px;
+    padding:12px 15px; font-size:14.5px; color:#4a3a17; margin:14px 0;
+  }
+  .note b{color:var(--warn);}
+  ul,ol{margin:8px 0 8px 22px; padding:0;}
+  li{margin:5px 0;}
+  .kbd{
+    font-family:Consolas,monospace; background:#f2f4f7; border:1px solid var(--line);
+    border-radius:4px; padding:1px 6px; font-size:13.5px;
+  }
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0;}
+  .cell{border:1px solid var(--line); border-radius:8px; padding:12px 14px; background:#fcfdfe;}
+  .cell h4{margin:0 0 4px; font-size:14.5px; color:var(--accent);}
+  .cell p{margin:0; font-size:13.5px; color:var(--sub); line-height:1.65;}
+  .quote{
+    font-size:15px; color:#0a4a48; background:var(--accent-soft);
+    border-radius:8px; padding:12px 16px; margin:14px 0;
+  }
+  footer{margin-top:48px; padding-top:16px; border-top:1px solid var(--line); color:var(--sub); font-size:13px;}
+  @media print{
+    body{background:#fff;} .page{max-width:none; padding:0;}
+    .stage{break-inside:avoid;}
+    h2{break-after:avoid;}
+  }
+  @media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>智析 · 面试演示话术</h1>
+  <p class="lede">三栏每一块都能讲出"它解决什么问题"；换表实测和工程追问，是扛住后 20 分钟的两块。方括号里是手上的动作。</p>
+  <p class="meta">演示环境：<span class="kbd">http://127.0.0.1:8010</span> ｜ 激活数据：连锁门店销售明细 2026 年 1–9 月（169,947 行）<br>
+  备用换表文件：<span class="kbd">D:\zhixi\samples\线上广告投放日报_2026年1-6月.csv</span>（4,525 行）</p>
+</header>
+
+<h2>开演前 60 秒</h2>
+<ol>
+  <li>双击 <span class="kbd">D:\zhixi\启动智析.bat</span>，窗口自己起服务并开浏览器，等 5–10 秒。</li>
+  <li>确认左侧「数据源」里打点的是 <b>连锁门店销售明细_2026年1-9月.xlsx</b>。</li>
+  <li>先问一句 <span class="kbd">2026年8月毛利是多少</span> 预热——首次请求要编译，会慢几秒。</li>
+  <li>浏览器最大化、缩放 100%。三栏布局挤窄了会掉行，很难看。</li>
+</ol>
+<div class="note">
+  <b>打不开：</b>看黑窗口有没有停在 <span class="kbd">[ERROR] service did not start</span>；换 <span class="kbd">http://localhost:8010</span>；还不行就临时关系统代理（Clash 的全局规则偶尔会劫持本地地址）。
+</div>
+
+<h2>第一幕 · 开场，20 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">台词</span><span class="time">不操作</span></div>
+  <div class="say">
+    "这是我独立做的一个自然语言数据分析平台。它解决的问题很具体：业务方想看数据但不会写 SQL，走数据团队排期要等几天。我做的是把一句中文问题，变成一次<b>可审计</b>的取数、一段能直接拿去汇报的结论。"
+    <br><br>
+    "底下是一条 7 个节点的分析流水线。结论里带编号的数字、右边 KPI、图上的柱子，点一下都能跳到底层那条 SQL。"
+  </div>
+</div>
+
+<h2>第二幕 · 一屏总览，40 秒，别省这段</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">鼠标从左到右划一遍，不点</span></div>
+  <div class="say">
+    "这一屏我分三块。<b>左边是输入和上下文</b>——数据源、记忆、工具清单；<b>中间是过程</b>，一次提问是怎么被执行的；<b>右边是结果和体检报告</b>——指标、自检分数、审计记录。"
+    <br><br>
+    "为什么这么排？因为分析工具最难的不是算出结论，是<b>让人敢用这个结论</b>。所以过程、依据、体检三样必须同时在一个屏幕里，不能藏在弹窗或者日志文件里。"
+  </div>
+  <p class="why"><b>他想看到：</b>你的界面有产品判断，不是把接口数据堆上去。这一句是整场演示的"设计观"，后面每个功能都可以挂回这句话。</p>
+</div>
+
+<h2>第三幕 · 取数：过程可见、结果可验，90 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">输入问题 1</span></div>
+  <p class="do">输入：<code>2026年7月总销售额多少？和6月比怎么样</code></p>
+  <div class="say">
+    "注意它不直接给答案。中间这条是流水线：主管 Agent 拆解问题 → 数据摸底 → 工具路由 → SQL 工程师 → 分析推理 → 自反思 → 报告撰写，七个节点逐个亮。"
+    <br><br>
+    "每个节点底下有个计时，<b>这是 performance.now() 量的真实墙钟，不是假进度条</b>。所以哪一步慢你能直接看出来——通常是 SQL 执行或者自反思那一轮。"
+    <br><br>
+    "看这一行槽位卡：时间 2026-07、指标销售额、维度整体、对比 2026-06、规划器 rule。<b>它怎么理解你这句话，全摊在这儿。</b>理解错了你当场就能发现，不用等报告写完再猜。"
+    <br><br>
+    "下面是思考流，每条前面带节点名。后端是真 SSE 流式推的，前端做了个队列，165 毫秒放一条——不做队列的话三十条日志会在一瞬间刷完，等于没显示。"
+    <br><br>
+    "还有左边这块工具注册表，26 个工具按数据、计算、检索、元信息四类分色。要说明一下：这是<b>内置业务模型</b>那条分支的能力清单——销售额、毛利、ROI、库存周转这些需要跨表算的指标，切回内置模型执行时对应工具会逐个点亮。上传数据走的是通用 SQL 引擎，这栏保持静态。两套并存是故意的：有领域模型就用专用工具，没有就用通用引擎，换张表也能跑。"
+  </div>
+  <p class="do">等 SQL 面板出来，指一下再往下走</p>
+  <div class="say">
+    "这是它真正执行的 SQL，语法高亮，下面这行元信息有四个数：返回行数、耗时、<b>绑定参数个数</b>、以及"只读连接 query_only"。参数化不是嘴上说的，这里有计数。"
+    <br><br>
+    "结果是 <b>180.1 万，环比 -4.27%</b>。我点这个角标——［点 ⟦S2⟧］——页面会滚到对应的证据卡并且闪一下。这张卡里有完整 SQL、绑定的参数值、EXPLAIN 扫描计划、还有返回的样本行。"
+    <br><br>
+    "不止角标。<b>右边 KPI 那个 180.1 万，鼠标放上去有个 ↗，点下去是同一个动作；图上的柱子、明细里的渠道金额也一样。</b>它们都挂着 data-ev 指向具体某一条取数记录，不是只做了报告里那两个上标。"
+    <br><br>
+    "证据区顶部这排 chips 是这次分析的链路：来源 → 用了哪张表、多少行 → 一共取了几次数。一个数字能点回一次取数，这是整套东西的底线。"
+  </div>
+  <p class="why"><b>他想看到：</b>你懂"可信"要付出什么工程代价。这一段的每个 UI 元素都对应一条后端事实，不是画出来的。</p>
+</div>
+
+<h2>第四幕 · 归因，90 秒，全场重点</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">输入问题 2</span></div>
+  <p class="do">输入：<code>为什么华南区7月销售额下降了</code></p>
+  <div class="say">
+    "取数只是第一层，业务真正要问的是'为什么'。"
+    <br><br>
+    "它给的是：华南 7 月较 6 月下滑 <b>25.98%</b>，最大拖累是「渠道」维度里的<b>外卖</b>，少了 <b>13.2 万</b>，占全部波动的 <b>88.6%</b>。右边图表自动换成了横向排行，一眼能看出是哪个成员在拖。"
+    <br><br>
+    "这里有个设计我想展开讲，因为是踩过坑的地方。最早的实现是随便挑一个维度拆，结果它答'深圳降了 65%'——深圳是地点，不是原因，典型假归因。"
+    <br><br>
+    "后来我改成先算每个候选维度的<b>波动集中度</b>：把这个维度下每个成员的变化额取绝对值，看最大的那个占全部波动的比例，谁高就用谁解释。渠道算出来 0.886，城市只有 0.65，所以它自己选了渠道。"
+    <br><br>
+    "边界也说清楚：这是贡献度分解，不是因果推断。我能告诉你是外卖拖的，不能告诉你是平台补贴退了——那需要外部数据，不能编。"
+  </div>
+  <p class="why"><b>他想看到：</b>你会自己发现"答对了字面、答错了问题"这类错误，并且能用可解释的方法修掉。</p>
+</div>
+
+<h2>第五幕 · 粒度自适应，45 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">输入问题 3</span></div>
+  <p class="do">输入：<code>深圳南山店2026年8月18日为什么销售额这么高</code></p>
+  <div class="say">
+    "这句带了具体日期，所以时间粒度自动下钻到天，不会再给整月汇总。结果 <b>1.9 万</b>，对比前一日 <b>+444.69%</b>，是一笔团购大单。"
+    <br><br>
+    "粒度是单独一层：说'按周看'会切成 5 周，说'8 月 18 日'只取那天，只有默认才按月。左边槽位卡里能直接看到它选了哪个区间。BI 里最常被吐槽的就是——我问的是那一天，你给我的是一整月。"
+  </div>
+</div>
+
+<h2>第六幕 · 换表：数据源面板，60 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">指左栏，再拖一个文件</span></div>
+  <div class="say">
+    "左边这块是数据源。列表里每一条显示行数、列数，点一下切换，激活的那条打点；旁边的小叉直接删，表和元数据一起删。"
+    <br><br>
+    "下面这列是<b>字段画像</b>：它自动判断每列是时间、指标、维度还是纯标识，还标了唯一值个数。比如'门店'只有 12 个值，是低基数维度；'订单号'唯一值接近总行数，是标识，不会拿去做分组。这个判断决定了后面 SQL 怎么生成。"
+    <br><br>
+    "文件直接拖进来就行，CSV、XLSX 都吃。解析完这里会短暂提示'已加载 N 行'。上面这个输入框可选填数据来源链接——填了之后，报告里的来源就是能点开的外链。"
+    <br><br>
+    "关键是：这套东西<b>没有为演示写死任何表名</b>。换一张表，问法不用变。"
+  </div>
+  <p class="why">如果时间够，补一句加分的：切到「英国在线零售真实交易」，问 <span class="kbd">2011年11月哪个国家卖得最好</span>，报告底部给的是 UCI 公开数据集的可点击真链接。</p>
+</div>
+
+<h2>第六幕 B · 现场换表，90 秒（这一下能证明"没写死"）</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">拖文件 → 指画像 → 连着问四句</span></div>
+  <p class="do">文件：<code>D:\zhixi\samples\线上广告投放日报_2026年1-6月.csv</code>　4,525 行 / 11 列</p>
+  <div class="say">
+    "这张表跟刚才那张没关系：不是门店，不是零售，是广告投放日报，字段名也完全不一样。我当着你的面拖进去。"
+    <br><br>
+    "看左栏的<b>字段画像</b>，四个判断都是它自己做的：<b>「投放流水号」4,525 个唯一值，等于行数 → 判成标识列，永远不会被拿去 GROUP BY</b>；「报表日期」是时间列；「广告渠道」「投放区域」「计划名称」是三个低基数维度；剩下五个数值列全是指标。"
+    <br><br>
+    "还有两个细节能说明它不是在读死配置：<b>原文件 11 列、入库 10 列</b>——「备注」整列是空的，被直接丢掉了；「投放花费」「成交金额」这两列的名字前后带空格（导出系统的脏格式），入库前做了清洗。"
+    <br><br>
+    "然后问法一个字都不用改。"
+  </div>
+  <p class="do">依次问这四句（数字我都核对过）</p>
+  <table>
+    <tr><th style="width:54%">问题</th><th>它答的</th></tr>
+    <tr><td>2026年6月成交金额是多少？和5月比怎么样</td><td class="num">313.3 万，环比 -6.53%</td></tr>
+    <tr><td>为什么6月成交金额下降了</td><td class="num">信息流-短视频 -25.2 万，占总波动 81.1%</td></tr>
+    <tr><td>各广告渠道的投放花费排行</td><td class="num">搜索广告 165.6 万（36.1%）居首</td></tr>
+    <tr><td>2026年成交金额趋势</td><td class="num">峰值 3 月 346.2 万，谷值 2 月 282.7 万</td></tr>
+  </table>
+  <div class="say">
+    "第四句多讲一句：3 月那个峰值不是我编的——这张表里埋了一个三八节品牌专区的集中投放，日数据聚合到月自己就露出来了。归因那句也一样：6 月预算多花了 13%，成交金额反而少了 6.5%，它指向的是信息流-短视频这个渠道——预算加投 41%、转化崩掉，钱花得更多、赚得更少。"
+    <br><br>
+    "为什么能换表？因为指标和维度不是写死的常量，是<b>入库时给每一列打角色标签</b>（时间 / 指标 / 维度 / 标识），规划器只认标签不认列名；SQL 里的列名全部从画像里取，问句里的字一个都不拼进 SQL。"
+    <br><br>
+    "边界也说清楚：这是<b>单表聚合</b>。跨表 join、毛利率这种多表派生指标，得走内置模型那条分支。换一张单表进来能问，换一套数仓进来得先建模——这两件事不是一回事。"
+  </div>
+  <p class="why"><b>他想看到：</b>你敢在面试现场做没排练的动作。这段最好留到他说"是不是只能跑你自己那张表"的时候再打出来，效果比主动演示强。</p>
+</div>
+<div class="note">
+  <b>演示完记得切回去</b>：左栏点「连锁门店销售明细_2026年1-9月.xlsx」，点一下即切换。不然后面台词里的 180.1 万、25.98% 全都对不上。切回后左栏示例问题会跟着变回门店口径，这一点本身也能当卖点说一句。
+</div>
+
+<h2>第七幕 · 右栏：给结论做体检，50 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">操作</span><span class="time">指右栏三张卡</span></div>
+  <div class="say">
+    "右上这块是核心指标：数字是滚动上去的，环比带箭头，<b>涨红跌绿</b>——按国内习惯来的，很多开源模板反着配色。下面这行是这次分析里其他关键量。"
+    <br><br>
+    "中间是自反思：一个环形分数，加六项<b>硬检查</b>逐条打勾——槽位覆盖、结果非空、总量自洽、贡献可加性、数据边界、时间槽位。注意这不是"让模型给自己打分"，是规则加权算的，模型自评只作辅助。不通过会退回补查，最多三轮。"
+    <br><br>
+    "最下面是审计：刚才问过的每一句都在，带 SQL 摘要和返回行数。左边还有记忆——可以存偏好，比如'默认看华东'，下次提问会带上。"
+  </div>
+  <p class="why"><b>他想看到：</b>你不只关心"答出来"，还关心"答得对不对、事后能不能查"。</p>
+</div>
+
+<h2>第八幕 · 界面不是装饰，60 秒（这段决定他觉得你是前端还是全栈）</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">台词</span><span class="time">不用操作，讲四个决策</span></div>
+  <div class="grid">
+    <div class="cell">
+      <h4>1. 计时是真的</h4>
+      <p>节点下面的秒数走 performance.now()，不是递增假动画。用户能定位瓶颈在哪一步。</p>
+    </div>
+    <div class="cell">
+      <h4>2. 打字不是假装加载</h4>
+      <p>后端真流式；前端把日志排队 165ms/条、报告 75ms/块，只为让你看清，不是为了拖时间。</p>
+    </div>
+    <div class="cell">
+      <h4>3. 角标是导航</h4>
+      <p>⟦S2⟧ 不是装饰符号，点它滚到对应证据卡并高亮。文字和证据是双向可跳的。</p>
+    </div>
+    <div class="cell">
+      <h4>4. 图表自动选型</h4>
+      <p>后端给 spec.type，前端决定用趋势线、横向排行还是单值大字，不硬编码一种图。</p>
+    </div>
+  </div>
+  <div class="say">
+    "还有一句我想主动说：粒子背景、发光、渐变这些纯视觉，我做了，但不拿它当卖点——<b>好看是入场券，不是能力证明</b>。真正花时间的是刚才那四个决策。"
+    <br><br>
+    "技术上没有框架：一个 HTML、一个 CSS、一个 JS，ECharts 本地打包，零构建。原因很实际——面试现场双击就能跑，多一个 npm install 就多一个失败点。状态量不大，原生 DOM 够用。"
+  </div>
+  <p class="why">主动给视觉降级，是这场演示里最容易拿分的一句话。绝大多数候选人会把渐变吹成"科技感"。</p>
+</div>
+
+<h2>第九幕 · 收尾，30 秒</h2>
+<div class="stage">
+  <div class="stage-head"><span class="tag">台词</span><span class="time">停在这里，把话头交回去</span></div>
+  <div class="say">
+    "后端是 FastAPI + SSE 流式，编排用 LangGraph 状态图，存储 SQLite，模型用 Pydantic 校验。安全三层：只读连接 query_only、全参数化、只允许 SELECT 加行数上限和超时。"
+    <br><br>
+    "规划层现在是纯离线规则引擎，配置里留了 OpenAI 兼容入口可以切 qwen-plus，但默认关着。这是取舍：规则引擎可控、可解释、不会幻觉，代价是特别口语的问法会退化。演示现场我不想赌网络和 key。"
+  </div>
+</div>
+
+<h2>他会问什么（背这十一个）</h2>
+<table>
+  <tr><th style="width:29%">追问</th><th>怎么答</th></tr>
+  <tr>
+    <td>为什么不用 React / Vue？</td>
+    <td>单页、状态不大、零构建。双击就能跑，面试现场少一个 npm 依赖就少一个故障点。换框架要 node_modules 加构建步骤，收益只有开发体验，这里不值。</td>
+  </tr>
+  <tr>
+    <td>为什么用 SSE 不用 WebSocket？</td>
+    <td>只有服务端单向推送，浏览器原生 EventSource 就够，断线自动重连，走 HTTP 不用额外协议和握手。双向需求才轮到 WebSocket。</td>
+  </tr>
+  <tr>
+    <td>流式前端怎么处理？</td>
+    <td>按 node 消息增量渲染：日志进队列逐条播、证据逐条 append、报告按块插入。用队列而不是直接刷，是为了保证每条都看得清——否则一次推 30 条等于没推。</td>
+  </tr>
+  <tr>
+    <td>为什么不用大模型直接 Text2SQL？</td>
+    <td>演示场景不可控：同一句问法两次生成不同 SQL，还会编不存在的列。规则解析慢一点但确定、可解释、能单测。LLM 通道留着，复杂问法该用它，这是产品分层不是技术洁癖。</td>
+  </tr>
+  <tr>
+    <td>那这算 AI 产品吗？</td>
+    <td>算，但 AI 不该背锅在"生成 SQL"这一步。它该放在理解问句、拆解归因路径、组织结论。取数必须确定，结论可以生成——这条线我划得很清楚。</td>
+  </tr>
+  <tr>
+    <td>数据量大了怎么办？</td>
+    <td>现在 SQLite 单机，百万行以下够用（当前最大表 17 万行，单次聚合百毫秒级）。再往上换列存，DuckDB 或 ClickHouse，加预聚合层。这块没做，是明确边界。</td>
+  </tr>
+  <tr>
+    <td>怎么防 SQL 注入 / 误删？</td>
+    <td>连接层 query_only 只读；所有值参数绑定不拼字符串；语句白名单只放 SELECT，加行数上限和超时。删表在引擎层就删不动。</td>
+  </tr>
+  <tr>
+    <td>归因的科学依据？</td>
+    <td>加法分解：成员变化 = 本期 − 上期，占比 = 该成员变化 ÷ 全部成员变化绝对值之和。它回答"变化从哪来"，不回答"为什么变"。要因果得上实验或外部数据，报告里也写了这个边界。</td>
+  </tr>
+  <tr>
+    <td>为什么有两套分析路径？</td>
+    <td>有领域模型时，毛利、ROI、库存周转这类指标要跨三张事实表算，用专用工具更准也更快；没有模型时走通用引擎，只做单表聚合，但换任何 CSV 都能用。优先级是：激活了上传数据就走通用，否则走内置。这是刻意分层，不是代码没统一。</td>
+  </tr>
+  <tr>
+    <td>左栏"分层记忆"是怎么分层的？</td>
+    <td>两层：用户偏好（跨轮生效，比如默认看华东）和会话轮次（本次提问历史）。后端是进程内字典，Redis 接口留了没接。别把它说成向量记忆，它不是。</td>
+  </tr>
+  <tr>
+    <td>多轮 / 上下文记忆？</td>
+    <td>有 memory 模块，进程内存储，Redis 没接。追问"那 8 月呢"能接上，服务重启会丢。这是待办，不是已完成。</td>
+  </tr>
+</table>
+
+<h2>工程落地：对接 ERP、上下游打通这 16 问</h2>
+<p>demo 的三块天然短板就是数据怎么进来、结论怎么出去、真上生产死在哪。这三块主动讲清楚，比被问穿强得多。每条按「<b>现在是什么 → 真做要怎么做 → 现在缺什么</b>」答，别把没做的说成做了。</p>
+
+<h3>一、上游：数据怎么接进来</h3>
+<table>
+  <tr><th style="width:27%">追问</th><th>怎么答</th></tr>
+  <tr>
+    <td>只会拖 Excel？我要接 ERP 怎么办？</td>
+    <td>拖文件只是<b>采集层的一个适配器</b>。同一层还有三种：只读账号直连库（走视图，不给表权限）、定时抽数（DataX / Kettle，按 dt 增量）、变更捕获（MySQL binlog → Kafka）。抽完统一落 ODS，再进我这套语义层。<b>ERP 真正的坑不在连接，在主数据</b>：物料、客户、门店编码各系统不一致，得先有一张映射表，否则"同一个客户"在三个系统里是三个人。</td>
+  </tr>
+  <tr>
+    <td>增量怎么拉？断了怎么补？</td>
+    <td>每条接入任务存一个<b>水位线</b>（最大 update_time 或自增 id），每次从水位线往后拉；任务失败不推水位线，重跑靠主键 upsert 保证幂等。我这边的等价物是<b>数据集版本</b>：每次上传是一个新表 + 一份元数据快照，失败不会污染旧表。真增量没做，现在是全量替换——17 万行替换只要一两秒，上千万行就不行了。</td>
+  </tr>
+  <tr>
+    <td>上游数据脏怎么办？</td>
+    <td>三档校验，按代价排序：<b>硬规则</b>（主键唯一、金额非负、日期不越界）直接拦；<b>软规则</b>（空值率突增、枚举越界、日环比超 3 倍）进隔离区等人看；<b>对账</b>（上游笔数/金额 vs 入库笔数/金额）出日报。脏数据不进主表，先进 quarantine 表——这点比"报错中断"重要，分析系统最怕的是悄悄少了一部分数据。</td>
+  </tr>
+  <tr>
+    <td>迟到数据 / 重复数据？</td>
+    <td>迟到：按 dt 分区，允许回刷过去 N 天，重跑覆盖同一分区，天然幂等。重复：业务主键 + 更新时间取最新一条，我用的是"上传即新表 + 元数据指向"，没有原地更新，所以不存在半更新状态。缺失的一环是<b>没有调度</b>，现在靠人拖文件。</td>
+  </tr>
+  <tr>
+    <td>财务和业务两套销售额，口径不一致怎么办？</td>
+    <td>这就是我为什么要做<b>语义层</b>：指标不是 SQL 字符串，是"指标 key + 口径 SQL + 版本 + 负责人"。内置模型里 METRICS 是白名单，改口径要改代码、要评审、要留版本号。业务口径（含税/退货）和财务口径（不含税/账期）可以并存，但必须<b>各自有名字</b>，最怕的是同一个名字两套算法。这块 demo 只有 5 个指标，没有版本管理。</td>
+  </tr>
+</table>
+
+<h3>二、下游：结论怎么打通回去</h3>
+<table>
+  <tr><th style="width:27%">追问</th><th>怎么答</th></tr>
+  <tr>
+    <td>分析结果怎么回到业务系统？</td>
+    <td>三条出口：<b>API</b>（结论对象已经是结构化 JSON，前端只是渲染器之一）、<b>推送</b>（企微/钉钉 webhook，异常波动主动推，不等业务来问）、<b>导出</b>（Excel/PDF 进汇报流程）。要<b>回写</b>到 ERP 或工单系统就是另一回事了：写通道必须单独开、走审批、留回滚，绝不能和只读的分析库共用账号。</td>
+  </tr>
+  <tr>
+    <td>怎么保证它不写坏生产库？</td>
+    <td>三层，层层独立：连接层 <span class="kbd">PRAGMA query_only</span>（SQLite 的只读模式，写语句在引擎层就报错）；语句层只放行 SELECT，加超时 8 秒和行数上限 5000；参数层全部绑定，不拼字符串。再接生产库的话再加两条：用只读从库、EXPLAIN 预检全表扫直接拒绝。</td>
+  </tr>
+  <tr>
+    <td>权限怎么做？谁能看哪张表、哪一行？</td>
+    <td><b>现在没有，这是真缺口</b>——本地单用户，默认你什么都能看。设计上是三层：数据集级 RBAC（谁能激活哪张表）、行级过滤（生成的 SQL 强制注入 <span class="kbd">WHERE org_id = ?</span>，值来自登录态不来自问句）、列级脱敏（手机号/身份证按角色打码）。行级过滤必须做在<b>SQL 生成层</b>而不是前端，否则谁都能绕。</td>
+  </tr>
+  <tr>
+    <td>那和帆软 / PowerBI / Superset 什么关系？</td>
+    <td>不是替代，是<b>入口层</b>。它们解决"看板怎么看"，我解决"问题怎么问"。语义层和权限层是共用的，理想形态是我产出结论和图表 spec，直接喂给现有看板；反过来说，如果公司已经有成熟 BI，我这套的定位是给不会用 BI 的人开一个自然语言口子，而不是重做一遍报表。</td>
+  </tr>
+  <tr>
+    <td>多人同时用呢？</td>
+    <td>现在单进程 uvicorn + SQLite，读并发没问题（WAL），写有锁。生产换 PostgreSQL + 连接池，分析请求进队列限流，长查询降级成异步任务。真正的瓶颈不是数据库，是<b>大模型的并发和限流</b>——同一时刻几十个人提问，token 成本会先炸。</td>
+  </tr>
+</table>
+
+<h3>三、生产化：技术上的硬边界</h3>
+<table>
+  <tr><th style="width:27%">追问</th><th>怎么答</th></tr>
+  <tr>
+    <td>数据量到 TB 呢？</td>
+    <td>SQLite 单机在千万行以下够用，现在最大表 17 万行、聚合百毫秒级。往上走三步：换列存（DuckDB 单机 / ClickHouse 集群）、建预聚合宽表（按天×渠道×区域的物化视图，把 90% 的查询打在汇总层）、查询下推 + 结果缓存（同一问句 + 同一份数据版本 → 直接返回）。这三步按代价从小到大做，多数公司卡在第二步没做，直接上集群反而更慢。</td>
+  </tr>
+  <tr>
+    <td>能实时吗？</td>
+    <td>现在是 T+1 批处理，因为绝大多数经营分析就是看昨天的数。<b>实时成本差一个数量级</b>：CDC + 流计算 + 实时 OLAP，运维复杂度完全不同。真要实时，也是只对少数几个指标（大促当天的 GMV、支付成功率）做实时链路，其余走 T+1，而不是全量上流。</td>
+  </tr>
+  <tr>
+    <td>怎么证明它答得准？准确率多少？</td>
+    <td>靠<b>黄金集回归</b>：100 条真实问句 + 标准 SQL + 标准答案，每次改规则跑一遍，看三个指标——意图准确率、SQL 执行成功率、数值一致率。现在手工核对了 8 个问题（表格里那些数字都是我拿 pandas 对过的），没有自动化回归，这是我要补的第一件事。</td>
+  </tr>
+  <tr>
+    <td>大模型幻觉怎么控？</td>
+    <td>把"生成"和"计算"切开：<b>数字只能来自 SQL 结果</b>，模型不许算数；规划层输出的是结构化 plan（Pydantic 强类型），不是自由 SQL，字段名必须能在画像里找到，否则拒绝；报告里的每个数字都挂 evidence id，点开能看到那条 SQL。<b>自检那 6 项就是在拦"数字对不上"</b>——比如拆解项之和必须等于总量，不通过就退回重查。</td>
+  </tr>
+  <tr>
+    <td>成本呢？一次提问多少钱？</td>
+    <td>默认模型是关的，走本地规则引擎，<b>零 token 成本</b>，单次分析 80 毫秒左右。开 qwen-plus 的话一次大概几千 token，按量算是分钱级，但人多就得上缓存和限流。这也是我为什么坚持"规则打底、模型增强"——不是技术洁癖，是成本结构决定的。</td>
+  </tr>
+  <tr>
+    <td>线上出问题怎么排查？</td>
+    <td>现在有的：每个节点的真实耗时、每步的 trace、每条 SQL 的参数/行数/扫描计划、审计日志（谁在什么时候问了什么）。<b>缺的是指标化和告警</b>——没有 Prometheus 打点、没有链路追踪、没有错误率看板。现在是"能事后查"，还不是"能事前发现"。</td>
+  </tr>
+  <tr>
+    <td>怎么交付部署？</td>
+    <td>现在是双击 bat 起 pythonw，监听 127.0.0.1，不装任何东西。<b>这是刻意的</b>：面试现场最怕环境问题。真要交付就 Docker Compose 三个容器（web / db / 调度），反向代理加鉴权，内网离线包。我们客户有内网环境的话，模型也得走本地部署，不能用公有云 API。</td>
+  </tr>
+  <tr>
+    <td>如果重做一遍，你先改什么？</td>
+    <td>三件事，按顺序：<b>一、自动化回归</b>（黄金集，不然每次改规则都是赌博）；<b>二、语义层独立出来</b>（现在指标定义和 SQL 生成耦在一个文件里）；<b>三、把 LLM 通道真正接上并做成可降级</b>（现在是规则单跑，复杂问法直接退化）。功能上不缺，缺的是"改得动、测得准"。</td>
+  </tr>
+</table>
+
+<div class="note">
+  <b>这一段的说话方式：</b>被问到没做的，先给一句"这个没做"，再给设计，最后给"为什么现在不做"。三句话说完就停。最忌讳的是把设计讲得比实现还详细——面试官一追问细节就露馅。
+</div>
+
+<h2>如果现场翻车</h2>
+<table>
+  <tr><th style="width:30%">现象</th><th>处理</th></tr>
+  <tr><td>页面打不开</td><td>看黑窗口是否报 ERROR；换 localhost；关系统代理；重双击启动脚本</td></tr>
+  <tr><td>问出来答非所问</td><td>别硬圆。说"这句超出我的规则覆盖，换个说法"，然后换成下面速查表里的问法——显得你知道系统边界</td></tr>
+  <tr><td>数字和预期不一致</td><td>现场点开证据卡核对 SQL，说"我们看它取的哪个区间"。这本身就在演示可审计性，比答对更加分</td></tr>
+  <tr><td>节点卡住不动</td><td>自反思那轮可能超时重试，最多三轮。说"它在补查，最多三次"——这是设计不是 bug</td></tr>
+  <tr><td>服务彻底起不来</td><td>别修。讲架构和三栏设计，把"环境问题"和"系统能力"分开说</td></tr>
+</table>
+
+<h2>标准问法速查（数字都可核对）</h2>
+<table>
+  <tr><th style="width:52%">问题</th><th>标准答案</th></tr>
+  <tr><td>2026年7月总销售额多少？和6月比怎么样</td><td class="num">180.1 万，环比 -4.27%</td></tr>
+  <tr><td>为什么华南区7月销售额下降了</td><td class="num">-25.98%，外卖 -13.2 万 / 占 88.6%</td></tr>
+  <tr><td>2026年8月各品类销售额排行</td><td class="num">现制饮品 92.4 万（50.4%）居首</td></tr>
+  <tr><td>华东区2026年8月哪个门店卖得最好</td><td class="num">上海静安店 16.7 万</td></tr>
+  <tr><td>2026年8月毛利是多少</td><td class="num">97.2 万</td></tr>
+  <tr><td>2026年销售额趋势</td><td class="num">峰值 5 月 200.9 万，谷值 9 月 156.1 万</td></tr>
+  <tr><td>深圳南山店2026年8月18日为什么销售额这么高</td><td class="num">1.9 万，+444.69%</td></tr>
+  <tr><td>按周看2026年7月销售额</td><td class="num">5 周，峰值 W29 42.4 万</td></tr>
+</table>
+
+<div class="quote">
+  一句话记住整场：<b>后端负责算对，界面负责让人相信它算对了。</b>三栏的每一块，都是这句话的注脚。
+</div>
+
+<footer>
+  智析 · 本地演示环境 ｜ 端口 8010 ｜ 日志：<span class="kbd">D:\zhixi\logs\server.log</span> ｜ 本页可 Ctrl+P 打印
+</footer>
+
+</div>
+</body>
+</html>

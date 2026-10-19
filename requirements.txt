@@ -1,0 +1,13 @@
+# 核心运行时
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pandas>=2.0
+numpy>=1.24
+pydantic>=2.5
+python-multipart>=0.0.9
+
+# Excel 解析（上传 .xlsx / 内置盘点表）
+openpyxl>=3.1
+
+# 可选：装了走 LangGraph 状态图，没装自动降级为原生状态机（功能等价）
+# langgraph>=0.2

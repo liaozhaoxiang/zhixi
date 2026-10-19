@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智析 · 企业数据智能分析 Agent</title>
+<link rel="stylesheet" href="/static/style.css?v=20261019d" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><span>智</span></div>
+    <div class="brand-text">
+      <h1>智析 <em>ZHI-XI</em></h1>
+      <p>企业数据智能分析 Agent · 多 Agent 协作</p>
+    </div>
+  </div>
+  <div class="top-chips">
+    <span class="chip"><i class="live"></i><b id="engineChip">LangGraph</b></span>
+    <span class="chip">4 <small>Agent</small></span>
+    <span class="chip">26 <small>Tools</small></span>
+    <span class="chip ghost" id="modelChip">模型加载中…</span>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- ============ 左栏 ============ -->
+  <aside class="col col-left">
+    <section class="card dataset-card">
+      <div class="card-head"><h3>数据源</h3><span class="tag" id="dsTag">内置示例</span></div>
+      <div class="drop" id="drop">
+        <input type="file" id="file" accept=".csv,.xlsx,.xls" hidden />
+        <div class="drop-icon">↥</div>
+        <div class="drop-t">拖入 CSV / Excel</div>
+        <div class="drop-s">或点击选择 · 单文件 ≤ 40MB</div>
+      </div>
+      <div class="ds-list" id="dsList"></div>
+      <div class="ds-prof" id="dsProf"></div>
+      <input id="dsSource" class="ds-src" placeholder="数据来源链接（可选，数据出自哪个系统/网站）" />
+      <button class="ds-reset" id="dsReset">切回内置示例数据</button>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h3>分层记忆</h3><span class="tag" id="memBackend">—</span></div>
+      <div class="mem-block">
+        <div class="mem-label">长期偏好 <small>SQLite · user_pref</small></div>
+        <div class="prefs" id="prefs"><span class="empty">还没有沉淀偏好</span></div>
+        <div class="pref-add">
+          <select id="prefKey">
+            <option value="region">默认区域</option>
+            <option value="category">常看品类</option>
+            <option value="channel">主渠道</option>
+          </select>
+          <input id="prefVal" placeholder="如 华东" />
+          <button id="prefSave">记住</button>
+        </div>
+      </div>
+      <div class="mem-block">
+        <div class="mem-label">短期会话 <small>最近 6 轮</small></div>
+        <div class="turns" id="turns"><span class="empty">本次会话还没有提问</span></div>
+      </div>
+    </section>
+
+    <section class="card tools">
+      <div class="card-head"><h3>工具注册表</h3><span class="tag" id="toolCount">0</span></div>
+      <div class="tool-grid" id="toolGrid"></div>
+      <div class="tool-legend">
+        <span><i style="background:#6ee7ff"></i>取数</span>
+        <span><i style="background:#a78bfa"></i>计算</span>
+        <span><i style="background:#f472b6"></i>检索</span>
+        <span><i style="background:#34d399"></i>元</span>
+      </div>
+    </section>
+  </aside>
+
+  <!-- ============ 中栏 ============ -->
+  <section class="col col-center">
+    <div class="ask card">
+      <div class="ask-glow"></div>
+      <textarea id="q" rows="2" placeholder="输入你的问题"></textarea>
+      <div class="ask-foot">
+        <div class="examples" id="examples"></div>
+        <button id="send" class="btn-primary">
+          <span>开始分析</span>
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h12M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card pipeline">
+      <div class="card-head">
+        <h3>Agent 编排流水线</h3>
+        <span class="tag" id="runState">待命</span>
+      </div>
+      <div class="flow" id="flow"></div>
+      <div class="flow-foot">
+        <div class="slot-row" id="slots"><span class="empty">槽位识别：等待提问</span></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card log-card">
+        <div class="card-head">
+          <h3>思考流</h3>
+          <div class="log-tools">
+            <span class="lk lk-think"><i></i>判断</span>
+            <span class="lk lk-act"><i></i>动作</span>
+            <span class="lk lk-obs"><i></i>观察</span>
+            <span class="tag" id="logCount">0</span>
+          </div>
+        </div>
+        <div class="log-body" id="log"><div class="log-empty">等待任务下发…</div></div>
+      </div>
+      <div class="card sql-card">
+        <div class="card-head"><h3>SQL 工程师产出</h3><span class="tag" id="sqlTag">只读</span></div>
+        <pre class="code" id="sql"><span class="code-empty">-- 生成后可查看参数化 SQL</span></pre>
+        <div class="sql-meta" id="sqlMeta"></div>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <h3>分析视图</h3>
+        <div class="seg" id="chartSeg"></div>
+      </div>
+      <div id="chart" class="chart"></div>
+    </div>
+
+    <div class="card report-card">
+      <div class="card-head"><h3>分析报告</h3><span class="tag ok" id="groundTag">数字溯源</span></div>
+      <div class="rep-hint">带 <sup class="cite">S2</sup> 角标的数字、右侧 KPI、图上柱子都能点开，跳到对应的 SQL 与扫描行数</div>
+      <div class="report" id="report"><div class="empty">报告撰写官会在这里输出中文分析报告，每个数字都可在结论对象里溯源。</div></div>
+    </div>
+
+    <div class="card evidence-card">
+      <div class="card-head">
+        <h3>数据来源 · 逐条可回溯</h3>
+        <div class="ev-head-right">
+          <span class="tag" id="evCount">0 条</span>
+          <button class="ev-toggle" id="evToggle">展开全部</button>
+        </div>
+      </div>
+      <div class="ev-flow" id="evFlow"></div>
+      <div class="ev-list" id="evList">
+        <div class="empty">还没有取数记录。每次查询都会登记：命中表、扫描行数、执行计划、参数和原始样本行。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 右栏 ============ -->
+  <aside class="col col-right">
+    <section class="card kpi-card">
+      <div class="card-head"><h3>核心指标</h3><span class="tag" id="kpiWindow">—</span></div>
+      <div class="kpi-main">
+        <div class="kpi-label" id="kpiLabel">销售额</div>
+        <div class="kpi-value"><span id="kpiValue">—</span><span class="kpi-unit" id="kpiUnit"></span></div>
+        <div class="kpi-delta" id="kpiDelta">等待分析</div>
+      </div>
+      <div class="kpi-list" id="kpiList"></div>
+    </section>
+
+    <section class="card reflect-card">
+      <div class="card-head"><h3>自反思</h3><span class="tag" id="roundTag">0 轮</span></div>
+      <div class="score-wrap">
+        <div class="score-ring" id="scoreRing"><span id="scoreVal">—</span></div>
+        <div class="score-side">
+          <div class="score-title" id="scoreTitle">尚未执行</div>
+          <div class="score-sub" id="scoreSub">置信度由 6 项硬检查加权得出</div>
+        </div>
+      </div>
+      <div class="checks" id="checks"></div>
+    </section>
+
+    <section class="card audit-card">
+      <div class="card-head"><h3>审计日志</h3><span class="tag">只读账号</span></div>
+      <div class="audit" id="audit"><div class="empty">暂无记录</div></div>
+    </section>
+  </aside>
+</main>
+
+<footer class="foot">
+  <span>智析 · 主管 Agent + SQL 工程师 + 分析推理师 + 报告撰写官</span>
+  <span id="footStats">数据加载中…</span>
+</footer>
+
+<script src="/static/vendor/echarts.min.js"></script>
+<script src="/static/app.js?v=20261019d"></script>
+</body>
+</html>

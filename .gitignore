@@ -1,0 +1,32 @@
+# 虚拟环境与缓存
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# 运行期产物：数据库、上传文件、日志（都由脚本重新生成）
+data/
+logs/
+*.db
+*.db-shm
+*.db-wal
+
+# 数据文件：仓库不塞大数据集，用脚本/链接重新获取
+uci_online_retail.zip
+samples/*
+!samples/README.md
+!samples/线上广告投放日报_2026年1-6月.csv
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 临时文件
+*.bak
+_shot*.html
+_adt.html
