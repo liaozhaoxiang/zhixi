@@ -122,7 +122,6 @@ gen_data.py       生成内置演示库
 make_sample_ads.py / make_sample_sales.py   生成样例表
 ingest_*.py       真实公开数据集入库脚本
 e2e_*.py          端到端回归脚本
-docs/演示脚本.html  九幕演示走查 + 工程追问应答（面试用）
 ```
 
 ## 接真实模型（可选）

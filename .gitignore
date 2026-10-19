@@ -30,3 +30,7 @@ desktop.ini
 *.bak
 _shot*.html
 _adt.html
+
+# 个人演示稿（面试口径，不随代码公开）
+docs/演示脚本.html
+面试演示话术.html
