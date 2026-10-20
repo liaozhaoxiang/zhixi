@@ -166,6 +166,7 @@ def analyze(body: AskBody):
             "reflection": out.get("reflection"),
             "report": out.get("report"),
             "rounds": out.get("rounds"),
+            "out_of_scope": bool(out.get("out_of_scope")),
             "trace": out.get("trace"),
             "elapsed_ms": out.get("elapsed_ms"),
         }

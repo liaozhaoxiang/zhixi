@@ -14,7 +14,7 @@ import operator
 import time
 from typing import Annotated, Any, TypedDict
 
-from . import config, datasets, generic, memory, planner, reflect, reporter, sql_engine, tools
+from . import config, datasets, generic, memory, planner, reflect, reporter, scope, sql_engine, tools
 from .analyst import analyze
 from .schemas import METRICS, Conclusion, Plan, ReflectionResult, ReportResult, TimeRange
 
@@ -40,6 +40,7 @@ class State(TypedDict, total=False):
     report: ReportResult
     rounds: int
     clarify: str | None
+    out_of_scope: bool
     trace: Annotated[list[dict[str, Any]], operator.add]
     evidence: Annotated[list[dict[str, Any]], operator.add]
 
@@ -81,12 +82,49 @@ def _src_of(state: State) -> tuple[str, str]:
 # --------------------------------------------------------------------------
 
 
+def _plan_for_refusal(q: str) -> Plan:
+    """拒答 / 闲聊时也要给撰写官一个结构，但这个 plan 不会被拿去取数。
+
+    不直接复用 planner.plan 的结果，是因为它会把「红烧肉」硬塞进 gmv 口径，
+    虽然不执行 SQL，但字段会漏到前端槽位面板里，看起来像真的规划过。
+    """
+    from .db import data_bounds
+
+    lo, hi = data_bounds()
+    return Plan(intent="summary", metric="gmv", time_range=TimeRange(label="—", start=lo, end=hi))
+
+
 def node_supervisor(state: State) -> dict[str, Any]:
     q = state["question"]
     uid = state.get("user_id", "demo")
 
+    # ---------------- 范围闸门：先判断这句话是不是在问数据 ----------------
+    # 放在最前面，是为了不浪费一次取数 + 一次反思重试，
+    # 也是为了避免输出「数据真实但答非所问」的结论。
+    active_ds = datasets.active()
+    verdict, scope_msg = scope.check(q, active_ds)
+    if verdict != "ok":
+        trace = [
+            _log("supervisor", f"收到问题：{q}"),
+            _log(
+                "supervisor",
+                "范围判定：超出数据分析范围，不进入取数链路" if verdict == "out_of_scope" else "范围判定：招呼语 / 能力询问，直接应答",
+                "warn",
+            ),
+            _log("supervisor", "跳过 规划 → 取数 → 反思，未消耗查询资源", "muted"),
+        ]
+        return {
+            "plan": _plan_for_refusal(q),
+            "mode": "dataset" if active_ds else "model",
+            "tool_names": [],
+            "clarify": scope_msg,
+            "out_of_scope": True,
+            "trace": trace,
+            "rounds": 0,
+        }
+
     # ---------------- 上传数据集分支 ----------------
-    ds = datasets.active()
+    ds = active_ds
     if ds:
         plan = generic.build_plan(q, ds)
         trace = [
@@ -372,6 +410,23 @@ def node_reflector(state: State) -> dict[str, Any]:
 
 
 def node_writer(state: State) -> dict[str, Any]:
+    if state.get("out_of_scope"):
+        c = Conclusion(
+            headline="",
+            metric="gmv",
+            metric_label="—",
+            unit="",
+            current=0.0,
+            current_display="—",
+            caveats=["未取数：本条问题不在数据分析范围内"],
+        )
+        rep = ReportResult(markdown=state["clarify"] or "", grounded=True)
+        return {
+            "conclusion": c,
+            "report": rep,
+            "out_of_scope": True,
+            "trace": [_log("writer", "输出能力边界说明，未生成任何数字，无需溯源校验", "warn")],
+        }
     if state.get("clarify"):
         plan = state["plan"]
         c = Conclusion(headline=state["clarify"], metric=plan.metric, metric_label=plan.metric, caveats=["槽位不足，未取数"])
@@ -497,6 +552,7 @@ def stream_events(question: str, user_id: str = "demo"):
                     "report": acc.get("report"),
                     "evidence": acc.get("evidence", []),
                     "rounds": acc.get("rounds", 0),
+                    "out_of_scope": bool(acc.get("out_of_scope")),
                     "trace": acc.get("trace", []),
                 }
             ),

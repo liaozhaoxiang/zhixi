@@ -896,7 +896,7 @@
       if (d.plan) renderSlots(d.plan);
       if (d.tool_names) markTools(d.tool_names);
       if (d.sql_result && d.sql_result.sql) renderSql(d.sql_result.sql, d.sql_result);
-      if (d.conclusion) renderKpi(d.conclusion);
+      if (d.conclusion && !d.out_of_scope) renderKpi(d.conclusion);
       if (d.reflection) renderChecks(d.reflection);
       if (d.report) {
         renderReport(d.report.markdown, true);
@@ -923,13 +923,15 @@
     document.querySelectorAll(".link").forEach((l) => l.classList.add("on"));
     if (result.plan) renderSlots(result.plan);
     if (result.sql_result?.sql) renderSql(result.sql_result.sql, result.sql_result);
-    if (result.conclusion) { renderKpi(result.conclusion); renderChart(result.conclusion); }
+    if (result.conclusion && !result.out_of_scope) { renderKpi(result.conclusion); renderChart(result.conclusion); }
     if (result.reflection) renderChecks(result.reflection);
     if (result.evidence) renderEvidence(result.evidence);
     if (result.report) {
       renderReport(result.report.markdown, false);
-      $("#groundTag").className = "tag " + (result.report.grounded ? "ok" : "err");
-      $("#groundTag").textContent = result.report.grounded ? "数字全部溯源" : "存在无出处数字";
+      $("#groundTag").className = "tag " + (result.out_of_scope ? "warn" : result.report.grounded ? "ok" : "err");
+      $("#groundTag").textContent = result.out_of_scope
+        ? "未取数 · 未生成数字"
+        : result.report.grounded ? "数字全部溯源" : "存在无出处数字";
     }
     $("#runState").textContent = `${engine || "langgraph"} · ${elapsed}ms`;
     $("#runState").className = "tag ok";
